@@ -1,13 +1,5 @@
-Azure Virtual Machine
+## Azure Virtual Machine
 ===========
-
-
-<p align="center">
-  <img src="https://github.com/bisskar/Sentinel_Local/assets/65374155/6ac14e59-f923-4cc6-a8fb-e79b9a6ea93c">
-</p>
-
-Description
-----------------------
 This Terraform module deploys an Azure Virtual Machine (VM) with the following components:
 
 - `Virtual Network`
@@ -15,8 +7,7 @@ This Terraform module deploys an Azure Virtual Machine (VM) with the following c
 - `Network Interface`
 - `Virtual Machine`
 
-
-### Module Local Parameters
+## Module Local Parameters
 
 VM OS/SKU size
 - `virtualmachine_os_type`  = f.e: "Linux"
@@ -28,42 +19,44 @@ Source image reference
 - `sku`       = f.e: "22_04-lts-gen2"
 - `version`   = f.e: "latest"
 
+<!-- BEGIN_TF_DOCS -->
+## Requirements
 
-### Module Input Variables
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.8 |
 
-- `subscription_name` = Azure subscribtion name
-- `resource_group_rg-vms` = Resource Group name
-- `keyvault_resource_id` = KeyVault Resource ID
-- `region` = Azure Region
+## Providers
 
-### Usage
+| Name | Version |
+|------|---------|
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | n/a |
 
+## Modules
 
-```hcl
-module "virtual-machine" {
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_naming"></a> [naming](#module\_naming) | Azure/naming/azurerm | >= 0.3.0 |
+| <a name="module_vm"></a> [vm](#module\_vm) | Azure/avm-res-compute-virtualmachine/azurerm | >= 0.13.0 |
 
-    source = "./modules/virtual-machine"
+## Resources
 
-    subscription_name = local.subscription_name
-    resource_group_rg-vms = module.rgs-law-sentinel.rg-vms
-    keyvault_resource_id = module.keyvault.keyvault_resource_id
-    region = local.region
+| Name | Type |
+|------|------|
+| [azurerm_subnet.vm_subnet](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/subnet) | resource |
+| [azurerm_virtual_network.vm_vnet](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_network) | resource |
 
-}
-```
+## Inputs
 
-Outputs
-=======
-```
-output "key" {
-  value     = module.vm.admin_password
-  sensitive = true
-}
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_keyvault_resource_id"></a> [keyvault\_resource\_id](#input\_keyvault\_resource\_id) | Key Vault resource ID | `string` | n/a | yes |
+| <a name="input_location"></a> [location](#input\_location) | Location for Azure resources | `string` | `"westeurope"` | no |
+| <a name="input_resource_group_rg-vms"></a> [resource\_group\_rg-vms](#input\_resource\_group\_rg-vms) | Key Vault resource group | `string` | n/a | yes |
 
-```
+## Outputs
 
-Authors
-=======
-Oskar Kazmierczyk
-bisskar@gmail.com
-
+| Name | Description |
+|------|-------------|
+| <a name="output_key"></a> [key](#output\_key) | VM Admin password |
+<!-- END_TF_DOCS -->

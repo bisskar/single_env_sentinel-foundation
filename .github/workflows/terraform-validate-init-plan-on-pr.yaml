@@ -107,6 +107,18 @@ jobs:
 
                 </details>
                 "
-
-
-                
+    docs:
+      runs-on: ubuntu-latest
+      needs: validate-fmt-plan
+      steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+  
+      - name: Render terraform docs and push changes back to PR
+        uses: terraform-docs/gh-actions@main
+        with:
+          working-dir: .
+          output-file: README.md
+          output-method: inject
+          git-push: "true"

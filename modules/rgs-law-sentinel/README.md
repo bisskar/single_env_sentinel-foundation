@@ -1,56 +1,60 @@
-Resource Groups, Log Analytics Workspace, Sentinel onboarding 
-===========
-
-
-<p align="center">
-  <img src="https://github.com/bisskar/Sentinel_Local/assets/65374155/063267fe-9c45-4741-a497-3adc61e4ac88">
-</p>
-
-Description
-----------------------
+## Resource Groups, Log Analytics Workspace, Sentinel onboarding 
 A terraform module to build a Resource Groups, Log Analytics Workspace and onboard Azure Sentinel 
 
+<!-- BEGIN_TF_DOCS -->
+## Requirements
 
-Module Input Variables
-----------------------
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.8 |
+| <a name="requirement_azuread"></a> [azuread](#requirement\_azuread) | ~> 2.48.0 |
+| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | ~> 3.101.0 |
 
-- `region` - Azure location
-- `law_name` - Log Analytics Workspace name 
-- `subscription_name` - Subscription name
+## Providers
 
-Usage
------
+| Name | Version |
+|------|---------|
+| <a name="provider_azuread"></a> [azuread](#provider\_azuread) | ~> 2.48.0 |
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | ~> 3.101.0 |
+| <a name="provider_time"></a> [time](#provider\_time) | n/a |
 
-```hcl
-module "rgs-law-sentinel" {
+## Resources
 
-    source = "./modules/rgs-law-sentinel"
+| Name | Type |
+|------|------|
+| [azurerm_log_analytics_workspace.law-sentinel](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/log_analytics_workspace) | resource |
+| [azurerm_resource_group.rg-names](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group) | resource |
+| [azurerm_role_assignment.sentinel_automation_contributor](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) | resource |
+| [azurerm_role_assignment.sentinel_contributor](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) | resource |
+| [azurerm_sentinel_log_analytics_workspace_onboarding.sentinel-onboarding](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/sentinel_log_analytics_workspace_onboarding) | resource |
+| [time_sleep.wait_30_seconds](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
+| [time_sleep.wait_30_seconds1](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
+| [azuread_service_principal.security_insights_app](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/data-sources/service_principal) | data source |
+| [azurerm_client_config.cfg](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/client_config) | data source |
 
-    region = local.region
-    subscription_name = local.subscription_name
-    law_name = local.law_name
-}
-```
+## Inputs
 
-Outputs
-=======
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_law_name"></a> [law\_name](#input\_law\_name) | Log Analytics Workspace name | `string` | n/a | yes |
+| <a name="input_location"></a> [location](#input\_location) | Location for Azure resources | `string` | `"westeurope"` | no |
+| <a name="input_subscription_name"></a> [subscription\_name](#input\_subscription\_name) | Azure subscription name | `string` | n/a | yes |
 
- - `rg-law` - Name of the Log Analytics Workspace resource group
- - `rg-shell` - Name of the Cloud Shell resource group
- - `rg-watchlist` - Name of the Watchlist resource group
- - `rg-keyvault` - Name of the KeyVault resource group
- - `rg-notebooks` - Name of the Notebooks resource group
- - `rg-playbooks` - Name of the  Playbooks resource group
- - `rg-workbooks` - Name of the Workbooks resource group
- - `rg-vms` - Name of the Virtual Machines resource group
- - `rg-network` - Name of the Network resource group
- - `rg-scaleset` - Name of the Scale Sets resource group
- - `rg-automation` - Name of the Automation resource group
- - `sentinel_onboarding_id` - Sentinel Onboarding ID
- - `law_workspace_id` - Log Analytics Workspace ID
+## Outputs
 
-
-Authors
-=======
-Oskar Kazmierczyk
-bisskar@gmail.com
+| Name | Description |
+|------|-------------|
+| <a name="output_law_workspace_id"></a> [law\_workspace\_id](#output\_law\_workspace\_id) | The ID of the Log Analytics workspace for law-related resources. |
+| <a name="output_rg-automation"></a> [rg-automation](#output\_rg-automation) | The resource group for managing automation-related resources. |
+| <a name="output_rg-keyvault"></a> [rg-keyvault](#output\_rg-keyvault) | The resource group for managing key vault-related resources. |
+| <a name="output_rg-law"></a> [rg-law](#output\_rg-law) | The resource group for managing law-related resources. |
+| <a name="output_rg-network"></a> [rg-network](#output\_rg-network) | The resource group for managing network-related resources. |
+| <a name="output_rg-notebooks"></a> [rg-notebooks](#output\_rg-notebooks) | The resource group for managing notebooks-related resources. |
+| <a name="output_rg-playbooks"></a> [rg-playbooks](#output\_rg-playbooks) | The resource group for managing playbooks-related resources. |
+| <a name="output_rg-scaleset"></a> [rg-scaleset](#output\_rg-scaleset) | The resource group for managing scale set-related resources. |
+| <a name="output_rg-shell"></a> [rg-shell](#output\_rg-shell) | The resource group for managing shell-related resources. |
+| <a name="output_rg-vms"></a> [rg-vms](#output\_rg-vms) | The resource group for managing virtual machine-related resources. |
+| <a name="output_rg-watchlist"></a> [rg-watchlist](#output\_rg-watchlist) | The resource group for managing watchlist-related resources. |
+| <a name="output_rg-workbooks"></a> [rg-workbooks](#output\_rg-workbooks) | The resource group for managing workbooks-related resources. |
+| <a name="output_sentinel_onboarding_id"></a> [sentinel\_onboarding\_id](#output\_sentinel\_onboarding\_id) | The ID of the Log Analytics workspace for Sentinel onboarding. |
+<!-- END_TF_DOCS -->

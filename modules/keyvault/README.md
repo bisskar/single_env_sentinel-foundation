@@ -1,43 +1,45 @@
-Keyvault
-===========
+## Keyvault
 
+A terraform module to build Azure Key Vault
 
-<p align="center">
-  <img src="https://github.com/bisskar/Sentinel_Local/assets/65374155/6d6709e3-3f07-4717-b78f-17c721ad0437">
-</p>
+<!-- BEGIN_TF_DOCS -->
+## Requirements
 
-Description
-----------------------
-A terraform module to build a Key Vault
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.8 |
 
+## Providers
 
-Module Input Variables
-----------------------
+| Name | Version |
+|------|---------|
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | n/a |
+| <a name="provider_time"></a> [time](#provider\_time) | n/a |
 
-- `resource_group_rg-keyvault` - Resource group name 
-- `region` - Azure region
+## Modules
 
-Usage
------
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_keyvault"></a> [keyvault](#module\_keyvault) | Azure/avm-res-keyvault-vault/azurerm | ~> 0.5.3 |
+| <a name="module_naming"></a> [naming](#module\_naming) | Azure/naming/azurerm | 0.3.0 |
 
-```hcl
-module "keyvault" {
-    source = "./modules/keyvault"
+## Resources
 
-    resource_group_rg-keyvault = module.rgs-law-sentinel.rg-keyvault
-    region = local.region
-}
-```
+| Name | Type |
+|------|------|
+| [time_sleep.wait_30_seconds](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
+| [azurerm_client_config.current](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/client_config) | data source |
 
-Outputs
-=======
+## Inputs
 
- - `keyvault_resource_id` - Key Vault resource ID
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_location"></a> [location](#input\_location) | Location for Azure resources | `string` | `"westeurope"` | no |
+| <a name="input_resource_group_rg-keyvault"></a> [resource\_group\_rg-keyvault](#input\_resource\_group\_rg-keyvault) | Key Vault resource group | `string` | n/a | yes |
 
-Authors
-=======
-Oskar Kazmierczyk
-bisskar@gmail.com
+## Outputs
 
-
-
+| Name | Description |
+|------|-------------|
+| <a name="output_keyvault_resource_id"></a> [keyvault\_resource\_id](#output\_keyvault\_resource\_id) | n/a |
+<!-- END_TF_DOCS -->

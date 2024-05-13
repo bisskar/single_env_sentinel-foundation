@@ -1,0 +1,31 @@
+formatter: "markdown table"
+version: "0.18"
+header-from: main.tf
+footer-from: ""
+recursive:
+  enabled: true
+  path: modules
+sections:
+  hide: []
+  show: [all]
+
+output-values:
+  enabled: false
+  from: ""
+sort:
+  enabled: true
+  by: name
+settings:
+  anchor: true
+  color: true
+  default: true
+  description: true
+  escape: true
+  hide-empty: true
+  html: true
+  indent: 2
+  lockfile: true
+  read-comments: true
+  required: true
+  sensitive: true
+  type: true
