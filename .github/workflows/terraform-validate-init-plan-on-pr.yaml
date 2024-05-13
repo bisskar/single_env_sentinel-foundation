@@ -1,0 +1,112 @@
+name: Terraform Validate, Plan
+run-name: Terraform validate, init, plan on pull request, env=${{github.base_ref}}, PR='#${{ github.event.pull_request.number }}, ${{ github.triggering_actor }}
+on:
+  pull_request:
+    types: [opened, synchronize]
+    branches: [main]
+    
+permissions:
+  id-token: write
+  contents: write
+  pull-requests: write
+
+
+jobs:  
+    validate-fmt-plan:        
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout              
+              uses: actions/checkout@v4
+              with:
+                ref: ${{ github.event.pull_request.head.sha }}
+
+            - name: Python setup    
+              uses: actions/setup-python@v5            
+              with:
+                python-version: '3.10'
+                cache: 'pip'
+            - run: pip install -r .github/requirements.txt
+
+            - name: 'Az CLI login'
+              uses: azure/login@v2
+              with:
+                  client-id: '${{ secrets.AZURE_CLIENT_ID }}'
+                  tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+                  subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+                  enable-AzPSSession: true
+
+            - name: Set up terraform
+              uses: hashicorp/setup-terraform@v3            
+
+            - name: Terraform Init & Validate
+              run: >
+                terraform init
+                -backend-config="resource_group_name=${{secrets.BACKEND_AZURE_RESOURCE_GROUP_NAME}}"
+                -backend-config="storage_account_name=${{secrets.BACKEND_AZURE_STORAGE_ACCOUNT_NAME}}"
+                -backend-config="container_name=${{secrets.BACKEND_AZURE_STORAGE_ACCOUNT_CONTAINER_NAME}}"
+                -backend-config="use_oidc=true"
+                -backend-config="subscription_id=${{secrets.AZURE_SUBSCRIPTION_ID}}"
+                -backend-config="tenant_id=${{secrets.AZURE_TENANT_ID}}"
+                -backend-config="client_id=${{secrets.AZURE_CLIENT_ID}}"
+                -backend-config="use_azuread_auth=true"
+                -backend-config="key=tfstate" &&
+                terraform validate
+
+            - name: TFLint setup    
+              uses: terraform-linters/setup-tflint@v4
+              with:
+                tflint_wrapper: true
+                tflint_version: latest  
+
+            - name: TFLint scan
+              id: tflint
+              run: | 
+                tflint --init --config=$(pwd)/.github/tflint.hcl
+                tflint --recursive --color --disable-rule=terraform_required_providers --disable-rule=terraform_required_version
+
+            - name: Post TFLint Comment
+              if: always()
+              uses: GetTerminus/terraform-pr-commenter@dpr-update-commenter
+              with:
+                commenter_type: tflint
+                commenter_input: ${{ format('{0}{1}', steps.tflint.outputs.stdout, steps.tflint.outputs.stderr) }}
+                commenter_exitcode: ${{ steps.tflint.outputs.exitcode }}
+
+            - name: Terraform plan
+              id: plan   
+              run: >
+                terraform plan --out tfplan.binary
+                -var 'location=${{vars.VAR_LOCATION}}'
+                -var 'subscription_name=${{vars.VAR_SUBSCRIPTION_NAME}}'
+                -var 'law_name=${{vars.VAR_LAW_NAME}}'
+                |& tee tf_plan.txt
+
+            - name: Post Terraform Plan Comment
+              uses: GetTerminus/terraform-pr-commenter@v3              
+              with:
+                commenter_type: plan
+                commenter_plan_path: tf_plan.txt
+                commenter_exitcode: ${{ steps.plan.outputs.exitcode }}
+
+            - name: Post Checkov Comment
+              if: always()
+              run: |
+                terraform show -json tfplan.binary | jq > tfplan.json
+                gh pr comment ${{ github.event.pull_request.number }} --body "
+                **Checkov scan results:**
+                <details>
+                <summary>Show Output</summary>
+                
+                \`\`\`
+                
+                    $(checkov -f tfplan.json --quiet --output cli)
+                
+                \`\`\`
+
+                </details>
+                "
+
+
+                

@@ -1,0 +1,43 @@
+name: Terraform FMT feature
+run-name: Terraform FMT on env=${{ github.ref }} push by ${{ github.triggering_actor }}
+on:
+  push:
+    branches: "feature/*"
+
+permissions:
+  id-token: write
+  contents: write
+
+jobs: 
+  terraform-fmt:    
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    runs-on: ubuntu-latest
+    steps:      
+      - name: Checkout              
+        uses: actions/checkout@v4
+        with:
+          ref: ${{github.ref}}
+
+      - name: Terraform fmt
+        run: terraform fmt -recursive 
+
+      - name: Check for changes
+        id: check_changes
+        run: |
+          if git diff --exit-code; then
+            echo "No changes to commit"
+            echo "::set-output name=changes::false"
+          else
+            echo "Changes detected"
+            echo "::set-output name=changes::true"
+          fi
+
+      - name: Apply changes
+        if: steps.check_changes.outputs.changes == 'true'
+        run: |
+          git config user.email "actions@github.com"
+          git config user.name "GitHub Actions"
+          git add .
+          git commit -m "Auto-format Terraform code"
+          git push origin HEAD:${GITHUB_REF}
