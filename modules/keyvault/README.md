@@ -21,7 +21,7 @@ A terraform module to build Azure Key Vault
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_keyvault"></a> [keyvault](#module\_keyvault) | Azure/avm-res-keyvault-vault/azurerm | ~> 0.5.3 |
-| <a name="module_naming"></a> [naming](#module\_naming) | Azure/naming/azurerm | 0.3.0 |
+| <a name="module_naming"></a> [naming](#module\_naming) | Azure/naming/azurerm | 0.4.1 |
 
 ## Resources
 

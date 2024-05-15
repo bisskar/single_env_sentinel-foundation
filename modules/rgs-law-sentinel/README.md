@@ -7,15 +7,15 @@ A terraform module to build a Resource Groups, Log Analytics Workspace and onboa
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.8 |
-| <a name="requirement_azuread"></a> [azuread](#requirement\_azuread) | ~> 2.48.0 |
-| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | ~> 3.101.0 |
+| <a name="requirement_azuread"></a> [azuread](#requirement\_azuread) | ~> 2.49.1 |
+| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | ~> 3.103.1 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_azuread"></a> [azuread](#provider\_azuread) | ~> 2.48.0 |
-| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | ~> 3.101.0 |
+| <a name="provider_azuread"></a> [azuread](#provider\_azuread) | ~> 2.49.1 |
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | ~> 3.103.1 |
 | <a name="provider_time"></a> [time](#provider\_time) | n/a |
 
 ## Resources

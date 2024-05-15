@@ -5,6 +5,10 @@ on:
     types: [closed]
     branches: [main]
 
+concurrency:
+  group: state_lock_group
+  cancel-in-progress: false
+  
 permissions:
   id-token: write
   contents: write
